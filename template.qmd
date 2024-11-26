@@ -26,7 +26,7 @@ using RainwaterHarvesting         # <2>
 Next, we specify the path to the rainfall data file and read it in.
 
 ```{julia}
-filepath = "data/1.txt" # <1>   
+filepath = "data/74.txt" # <1>   
 rainfall_data = RainfallData(filepath) # <2>
 ```
 
@@ -50,54 +50,29 @@ plot(rainfall_data) # <1>
 
 ### Discussion
 
-*Insert discussion here*
+Given txt 74, also known as Jaguaribe, we see that after data cleaning there is 50 years worth of data from 1973 to present. With this in mind we can conclude and infer that we have sufficient information for meaningful risk management. This place in Brazil is known for its high amounts of droughts. The era where droughts hapened the most was in the years of 2012-2017 which we can see aligns with the data given from our graph/plot. Most missing data could come from the fact that droughts happened which would lead to no data being available. 
+Source: Seigerman, C. K., Leite, N. S., Martins, E. S. P., & Nelson, D. R. (2024). At the extremes: Assessing interrelations among the impacts of and responses to extreme hydroclimatic events in Ceará, Northeast Brazil. Journal of Hydrology, 632, 130850. https://doi.org/10.1016/j.jhydrol.2024.130850
+
 
 ## Understanding the Theoretical Model
 
-Let's explore the model that simulates the rainwater harvesting system.
+A big problem with these equations is the abundance of assumptions being made. THere are many assumptions that are being made which can lead to inaccurate estimates. FOr example, for consumption we are assuming that we are in an ideal world where the household uses the water from the tank afer day 150. THis is not true since it could happen any day after or any day before 150 days passes. Furthurmore, we are assuming that each household tank contains only 74.1 liters per day uring the dry season. Again, this number could vary for multiple different factors. Some of these factors might include(location, average temperature, time, season, etc.). Additionally, we are not factoring in evaportation which is a big reason for many droughts so if we are able to incoporate it then it will help the estimate more. To recieve a more accurate and precise number I think we should start off by taking more data that will output a better number. I also think it would be better to change C_t from a number to an equation t provide a better estimate. 
 
 ### Mass Balance Equation
 
-The mass balance model for the rainwater tank is given by:
+The modified mass balance model for the rainwater tank is given by:
 
 $$
-V_{t+1} = V_t + Q_t - C_t | 0 \leq V_t \leq V_\text{max}
+V_{t+1} = V_t + Q_t - C_t - E_t| 0 \leq V_t \leq V_\text{max}
 $$
 
 - $V_t$: the volume of water in the tank at time $t$
 - $Q_t$ is the volume of water added to the tank at time $t$
 - $C_t$ is the volume of water consumed at time $t$
 - $V_\text{max}$: the maximum volume of the tank
+- $E_t$: The average amoount of water loss due to evaporation at a pecific location during at time t.
 
-### Inflow ($Q_t$)
-
-Inflow is calculated as
-
-$$
-Q_t = \eta \times A \times \max(P_t - F, 0).
-$$
-
-- $\eta$: the runoff coefficient, which accounts for losses due to evaporation, spilling, etc.
-- $A$: the area of the roof (we will use square meters)
-- $P_t$: the precipitation at time $t$ (we will use millimeters per day)
-- $F$: the first flush volume (we will use millimeters). The first flush volume is often discarded, so that each time it rains the first bit of water (which is usually dirty) is not used (see [here](https://rainwaterharvesting.tamu.edu/pre-storage-treatment/) for more details).
-
-### Consumption
-
-Consumption is modeled as:
-
-$$
-C_t = \begin{cases}
-    74.1 & \quad \text{day of year} > 150 \\
-    0 & \quad \text{day of year} \leq 150
-\end{cases}
-$$
-
-This makes two major assumptiuons.
-First, the household begins using water from the tank after the 150th day of the year.
-This is based on the idea that the rainy season lasts for about the first 150 days of the year, and so they may have other sources of water before then.
-The second assumption is that each household consumes 74.1 liters per day during the dry season.
-How does this compare to your household's water usage?
+Where I decided to chaneg the value of C_t and include a value for E_t(Average water loss due to evaporation at a certain location at time t)
 
 ## Model Implementation and Testing
 
@@ -110,17 +85,13 @@ You will have the opportunity to change these values later.
 #| output: false
 param = ModelParameters(          # <1>
     runoff_coefficient=0.85,      # <2>
-    roof_area_m2=45.0,            # <3>
-    first_flush_mm=2.0,           # <4>
+    roof_area_m2=55.0,            # <3>
+    first_flush_mm=1.0,           # <4>
     tank_capacity_L=16000.0       # <5>
 )
 ```
 
-1. This creates a `ModelParameters` object with the specified parameters.
-2. The runoff coefficient ($\eta$) is a measure of how much of the rain that falls on the roof ends up in the tank.
-3. The roof area ($A$) is the area of the roof that the rain falls on.
-4. The first flush volume ($V_f$) is the volume of rain that is discarded because it is dirty.
-5. The tank capacity ($V_\text{max}$) is the maximum volume of the tank.
+I increased te roof area, doing this will increase the water flow of the tank. THerefore we can infer that there is a directly proportional relationship between the inflow of the water tank with the area of the roof.
 
 ### Running the Simulation for One Year
 
