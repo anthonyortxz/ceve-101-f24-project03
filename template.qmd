@@ -56,7 +56,7 @@ Source: Seigerman, C. K., Leite, N. S., Martins, E. S. P., & Nelson, D. R. (2024
 
 ## Understanding the Theoretical Model
 
-A big problem with these equations is the abundance of assumptions being made. THere are many assumptions that are being made which can lead to inaccurate estimates. FOr example, for consumption we are assuming that we are in an ideal world where the household uses the water from the tank afer day 150. THis is not true since it could happen any day after or any day before 150 days passes. Furthurmore, we are assuming that each household tank contains only 74.1 liters per day uring the dry season. Again, this number could vary for multiple different factors. Some of these factors might include(location, average temperature, time, season, etc.). Additionally, we are not factoring in evaportation which is a big reason for many droughts so if we are able to incoporate it then it will help the estimate more. To recieve a more accurate and precise number I think we should start off by taking more data that will output a better number. I also think it would be better to change C_t from a number to an equation t provide a better estimate. 
+A big problem with these equations is the abundance of assumptions being made. There are many assumptions that are being made which can lead to inaccurate estimates. For example, for consumption we are assuming that we are in an ideal world where the household uses the water from the tank afer day 150. This is not true since it could happen any day after or any day before 150 days passes. Furthurmore, we are assuming that each household tank contains only 74.1 liters per day uring the dry season. Again, this number could vary for multiple different factors. Some of these factors might include(location, average temperature, time, season, etc.). Additionally, we are not factoring in evaportation which is a big reason for many droughts so if we are able to incoporate it then it will help the estimate more. To recieve a more accurate and precise number I think we should start off by taking more data that will output a better number. I also think it would be better to change C_t from a number to an equation t provide a better estimate. 
 
 ### Mass Balance Equation
 
@@ -70,9 +70,9 @@ $$
 - $Q_t$ is the volume of water added to the tank at time $t$
 - $C_t$ is the volume of water consumed at time $t$
 - $V_\text{max}$: the maximum volume of the tank
-- $E_t$: The average amoount of water loss due to evaporation at a pecific location during at time t.
+- $E_t$: The average amoount of water loss due to evaporation at a specific location during at time t.
 
-Where I decided to chaneg the value of C_t and include a value for E_t(Average water loss due to evaporation at a certain location at time t)
+Where I decided to change the value of C_t and include a value for E_t(Average water loss due to evaporation at a certain location at time t)
 
 ## Model Implementation and Testing
 
@@ -91,7 +91,7 @@ param = ModelParameters(          # <1>
 )
 ```
 
-I increased te roof area, doing this will increase the water flow of the tank. THerefore we can infer that there is a directly proportional relationship between the inflow of the water tank with the area of the roof.
+I increased te roof area, doing this will increase the water flow of the tank. Therefore we can infer that there is a directly proportional relationship between the inflow of the water tank with the area of the roof.
 
 ### Running the Simulation for One Year
 
@@ -127,5 +127,9 @@ any_failures = [!isempty(result.failure_dates) for result in all_results]  # <3>
 println("Number of years with failures: ", sum(any_failures), " out of ", length(all_years))  # <4>
 ```
 
+1. We get all the years in order.
+2. We run the simulation for each year.
+3. We check if any failures occurred.
+4. We print the number of years with failures and the total number of years.
 
-Here we see that there 12 out of 50 failures that happen. This equates to a 24% chance of failure happening. I think just overall being able to make the graphs more readable would help many people who are working with this data to find a better and more optimal solution.  
+Here we see that there 7 out of 50 failures that happen. This equates to a 14% chance of failure happening. I think just overall being able to make the graphs more readable would help many people who are working with this data to find a better and more optimal solution.  
